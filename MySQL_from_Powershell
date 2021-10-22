@@ -1,0 +1,22 @@
+<#first you need to connect powershell to mysql, I used this tutorial: 
+https://www.techtrek.io/connecting-powershell-to-mysql-database/ 
+I'm sure theres another way, but this one worked for me.#>
+
+#I had to download from the link in the tutorial: https://dev.mysql.com/downloads/connector/net/
+[void][System.Reflection.Assembly]::LoadFrom(“C:\Program Files (x86)\MySQL\MySQL Connector Net 8.0.27\Assemblies\net5.0\MySql.Data.dll”)
+
+$myconnection = New-Object MySql.Data.MySqlClient.MySqlConnection
+
+$myconnection.ConnectionString = “server=x.x.x.x;user id=****;password=*********;database=xxxxx;pooling=false”
+
+Set-Location "C:\enter\path\here"
+
+ForEach ($identifier in Get-Content "mac.txt"){
+$myconnection.Open()
+$mycommand = New-Object MySql.Data.MySqlClient.MySqlCommand
+$mycommand.Connection = $myconnection
+$mycommand.CommandText = “Insert MySQL command here"
+$myreader = $mycommand.ExecuteReader()
+while($myreader.Read()){$myreader.GetString(0)}
+$myconnection.Close()
+} 
